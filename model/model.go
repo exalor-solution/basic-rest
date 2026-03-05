@@ -26,7 +26,7 @@ type Subscription struct {
 	Name      string   `json:"name"`
 	Price     float64  `json:"price"`
 	Currency  currency `json:"currency"`
-	CreatedAt string
+	createdAt string
 	updatedAt string
 	stat      Status
 }
@@ -37,7 +37,7 @@ func New() *Subscription {
 		Name:      "",
 		Price:     0,
 		Currency:  "",
-		CreatedAt: time.Now().String(),
+		createdAt: time.Now().String(),
 		updatedAt: "",
 		stat:      valid,
 	}

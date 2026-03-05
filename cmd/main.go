@@ -43,7 +43,7 @@ func main() {
 
 	srv := http.Server{
 		Addr:    address,
-		Handler: xHttp.Run(),
+		Handler: xHttp.Run(ctx, logger),
 	}
 
 	go func() {

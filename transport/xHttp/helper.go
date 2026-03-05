@@ -1,10 +1,12 @@
 package xHttp
 
 import (
+	"context"
 	"io"
 	"net/http"
 
 	"github.com/exalor-solution/rest-basic/pkg/service"
+	"github.com/exalor-solution/rest-basic/pkg/xLogger"
 )
 
 const (
@@ -22,11 +24,10 @@ var (
 
 func init() {
 	dic = make(map[string]func(http.ResponseWriter, *http.Request), 5)
-	srv = service.New()
-
 }
 
-func load() {
+func load(ctx context.Context, l xLogger.ILogger) {
+	srv = service.New(l)
 
 	dic[root] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -46,15 +47,15 @@ func load() {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
 
-		err := srv.Add(byt)
+		err := srv.Add(ctx, byt)
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
 
-		_, _ = writer.Write([]byte("success"))
 		writer.WriteHeader(http.StatusOK)
+		_, _ = writer.Write([]byte("success"))
 
 	}
 
@@ -65,15 +66,15 @@ func load() {
 			return
 		}
 
-		err := srv.Delete(request.URL.Query().Get("name"))
+		err := srv.Delete(ctx, request.URL.Query().Get("name"))
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
 
-		_, _ = writer.Write([]byte("success"))
 		writer.WriteHeader(http.StatusOK)
+		_, _ = writer.Write([]byte("success"))
 
 	}
 	dic[update] = func(writer http.ResponseWriter, request *http.Request) {
@@ -87,15 +88,15 @@ func load() {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
 
-		err := srv.Update(request.URL.Query().Get("name"), byt)
+		err := srv.Update(ctx, request.URL.Query().Get("name"), byt)
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
 
-		_, _ = writer.Write([]byte("success"))
 		writer.WriteHeader(http.StatusOK)
+		_, _ = writer.Write([]byte("success"))
 	}
 	dic[find] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -104,15 +105,15 @@ func load() {
 			return
 		}
 
-		res, err := srv.Find(request.URL.Query().Get("name"))
+		res, err := srv.Find(ctx, request.URL.Query().Get("name"))
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
 
-		_, _ = writer.Write([]byte(res))
 		writer.WriteHeader(http.StatusOK)
+		_, _ = writer.Write([]byte(res))
 	}
 }
 

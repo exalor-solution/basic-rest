@@ -25,8 +25,8 @@ func (d *Dao) Find(name string) (*model.Subscription, error) {
 	}
 	return nil, errors.New("not found")
 }
-func (d *Dao) Create(sub *model.Subscription) error {
-	if sub == nil {
+func (d *Dao) Create(s *model.Subscription) error {
+	if s == nil {
 		return errors.New("no subs")
 	}
 	for _, sub := range d.Subs {
@@ -34,7 +34,7 @@ func (d *Dao) Create(sub *model.Subscription) error {
 			return errors.New("already exists")
 		}
 	}
-	d.Subs = append(d.Subs, *sub)
+	d.Subs = append(d.Subs, *s)
 	return nil
 }
 
