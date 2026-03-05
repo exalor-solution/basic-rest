@@ -41,17 +41,20 @@ func load() {
 			_, _ = writer.Write([]byte("/add is not allowed, "))
 			return
 		}
-		byt, err := io.ReadAll(request.Body)
-		if err != nil {
+		byt, code := read(request.Body)
+		if code != http.StatusOK {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
 
-		err = srv.Add(byt)
+		err := srv.Add(byt)
 		if err != nil {
 			writer.WriteHeader(http.StatusInternalServerError)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
+
+		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(http.StatusOK)
 
 	}
 
@@ -61,6 +64,17 @@ func load() {
 			writer.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
+
+		err := srv.Delete(request.URL.Query().Get("name"))
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			_, _ = writer.Write([]byte(err.Error()))
+			return
+		}
+
+		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(http.StatusOK)
+
 	}
 	dic[update] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -68,6 +82,20 @@ func load() {
 			writer.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
+		byt, code := read(request.Body)
+		if code != http.StatusOK {
+			writer.WriteHeader(http.StatusInternalServerError)
+		}
+
+		err := srv.Update(request.URL.Query().Get("name"), byt)
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			_, _ = writer.Write([]byte(err.Error()))
+			return
+		}
+
+		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(http.StatusOK)
 	}
 	dic[find] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -75,5 +103,23 @@ func load() {
 			writer.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
+
+		res, err := srv.Find(request.URL.Query().Get("name"))
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			_, _ = writer.Write([]byte(err.Error()))
+			return
+		}
+
+		_, _ = writer.Write([]byte(res))
+		writer.WriteHeader(http.StatusOK)
 	}
+}
+
+func read(reader io.Reader) ([]byte, int) {
+	byt, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, http.StatusMethodNotAllowed
+	}
+	return byt, http.StatusOK
 }

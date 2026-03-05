@@ -25,8 +25,17 @@ func (d *Dao) Find(name string) (*model.Subscription, error) {
 	}
 	return nil, errors.New("not found")
 }
-func (d *Dao) Create(sub *model.Subscription) {
+func (d *Dao) Create(sub *model.Subscription) error {
+	if sub == nil {
+		return errors.New("no subs")
+	}
+	for _, sub := range d.Subs {
+		if sub.Name == sub.Name {
+			return errors.New("already exists")
+		}
+	}
 	d.Subs = append(d.Subs, *sub)
+	return nil
 }
 
 func (d *Dao) Update(name string, s *model.Subscription) error {
