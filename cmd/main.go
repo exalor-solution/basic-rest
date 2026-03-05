@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/exalor-solution/rest-basic/transport/xHttp"
 	"go.uber.org/zap"
 
 	l "github.com/exalor-solution/rest-basic/pkg/xLogger"
@@ -15,6 +16,7 @@ import (
 
 const (
 	logName = "x-app.basic-rest.service"
+	address = "0.0.0.0:8080"
 )
 
 var (
@@ -29,7 +31,6 @@ func init() {
 }
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
-
 	logger := l.NewLogger(logName)
 	defer func() {
 		logger.Info(ctx, "stopping service...")
@@ -41,8 +42,8 @@ func main() {
 	// load config
 
 	srv := http.Server{
-		Addr:    "",
-		Handler: nil,
+		Addr:    address,
+		Handler: xHttp.Run(),
 	}
 
 	go func() {
