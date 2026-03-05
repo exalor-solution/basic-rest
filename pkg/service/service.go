@@ -1,35 +1,49 @@
 package service
 
+import (
+	"encoding/json"
+
+	"github.com/exalor-solution/rest-basic/model"
+)
+
 type ISubscription interface {
-	Add() error
+	Add([]byte) error
 	Delete() error
 	Update() error
 	Find() error
 }
 
-type Subscription struct {
+type Repo struct {
+	S model.Subscription
 }
 
 func New() ISubscription {
-	return Subscription{}
+	return Repo{S: *model.New()}
 }
 
-func (s Subscription) Add() error {
+func (s Repo) Add(b []byte) error {
+	if err := json.Unmarshal(b, &s.S); err != nil {
+		return err
+	}
+	if err := s.S.IsValid(); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (s Repo) Delete() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s Subscription) Delete() error {
+func (s Repo) Update() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s Subscription) Update() error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s Subscription) Find() error {
+func (s Repo) Find() error {
 	//TODO implement me
 	panic("implement me")
 }

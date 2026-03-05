@@ -51,7 +51,6 @@ func main() {
 		if err := srv.ListenAndServe(); err != nil {
 			internalInterrupt <- err
 		}
-
 	}()
 
 	logger.Info(ctx, "service listening for any interrupt signals...")
@@ -60,7 +59,7 @@ func main() {
 	case <-osInterrupt:
 		logger.Info(ctx, "OS interrupt signal received")
 	case e := <-internalInterrupt:
-		logger.Error(ctx, "user service listener interrupt signal received, %+v", zap.Any("lis", e))
+		logger.Error(ctx, "service listener interrupt, %+v", zap.Any("lis", e))
 	}
 
 }

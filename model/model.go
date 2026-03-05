@@ -1,6 +1,7 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"time"
 
@@ -25,7 +26,7 @@ type Subscription struct {
 	Name      string   `json:"name"`
 	Price     float64  `json:"price"`
 	Currency  currency `json:"currency"`
-	CreatedAt string   `json:"created_at"`
+	CreatedAt string
 	updatedAt string
 	stat      Status
 }
@@ -42,7 +43,7 @@ func New() *Subscription {
 	}
 }
 
-func (s *Subscription) ID() uuid.UUID {
+func (s *Subscription) GetId() uuid.UUID {
 	return s.id
 }
 func (s *Subscription) GetStatus() Status {
@@ -62,4 +63,18 @@ func (s *Subscription) IsValid() error {
 		return errors.New("invalid currency")
 	}
 	return nil
+}
+func (s *Subscription) ToJson() (string, error) {
+	byt, err := json.Marshal(s)
+	if err != nil {
+		return "", err
+	}
+	return string(byt), nil
+}
+func (s *Subscription) FromJson(str string) error {
+	err := json.Unmarshal([]byte(str), s)
+	if err != nil {
+		return err
+	}
+	return s.IsValid()
 }
