@@ -1,12 +1,15 @@
 # Docker Hub pull & Run:
 - docker pull mhthrh/basic_rest:latest
 - docker run --rm -p 8080:8080 mhthrh/basic_rest:latest
+- Test it now!!
+- This **Subscription REST API** service is fully up and running at [http://dev.exalor.ca:8080](http://dev.exalor.ca:8080). You can access all endpoints directly on this server to add, update, find, or delete subscriptions without needing to run it locally.
+
 
 # Subscription REST API (Go)
 
 A simple REST service written in Go to manage subscriptions.
 
-- Base URL: `http://localhost:8080`
+- Base URL: `http://dev.exalor.ca:8080`
 - Port: `8080`
 
 ## Model
@@ -47,7 +50,7 @@ Request JSON:
 
 cURL:
 ```bash
-curl -X POST http://localhost:8080/add   -H "Content-Type: application/json"   -d '{"name":"Netflix","price":16.99,"currency":"CAD"}'
+curl -X POST http://dev.exalor.ca:8080/add   -H "Content-Type: application/json"   -d '{"name":"Netflix","price":16.99,"currency":"CAD"}'
 ```
 
 ---
@@ -74,7 +77,7 @@ Request JSON:
 
 cURL:
 ```bash
-curl -X PUT http://localhost:8080/put?name=Netflix   -H "Content-Type: application/json"   -d '{"name":"Netflix","price":18.99,"currency":"CAD"}'
+curl -X PUT http://dev.exalor.ca:8080/put?name=Netflix   -H "Content-Type: application/json"   -d '{"name":"Netflix","price":18.99,"currency":"CAD"}'
 ```
 
 ---
@@ -91,7 +94,7 @@ Example:
 
 cURL:
 ```bash
-curl http://localhost:8080//find?name=Netflix
+curl http://dev.exalor.ca:8080//find?name=Netflix
 ```
 
 Response JSON:
@@ -117,7 +120,7 @@ Example:
 
 cURL:
 ```bash
-curl -X DELETE http://localhost:8080/del?name=Netflix
+curl -X DELETE http://dev.exalor.ca:8080/del?name=Netflix
 ```
 
 ---
