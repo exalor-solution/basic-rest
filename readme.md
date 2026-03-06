@@ -1,3 +1,7 @@
+# Docker Hub pull & Run:
+- docker pull mhthrh/basic_rest:latest
+- docker run --rm -p 8080:8080 mhthrh/basic_rest:latest
+
 # Subscription REST API (Go)
 
 A simple REST service written in Go to manage subscriptions.
