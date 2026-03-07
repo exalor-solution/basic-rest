@@ -30,7 +30,7 @@ func (d *Dao) Create(s *model.Subscription) error {
 		return errors.New("no subs")
 	}
 	for _, sub := range d.Subs {
-		if sub.Name == sub.Name {
+		if sub.Name == s.Name {
 			return errors.New("already exists")
 		}
 	}
