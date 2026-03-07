@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/exalor-solution/rest-basic/model"
 	"github.com/exalor-solution/rest-basic/pkg/service"
 	"github.com/exalor-solution/rest-basic/pkg/xLogger"
 )
@@ -38,8 +39,8 @@ func load(ctx context.Context, l xLogger.ILogger) {
 	dic[add] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if request.Method != "POST" {
-			writer.WriteHeader(http.StatusMethodNotAllowed)
-			_, _ = writer.Write([]byte("/add is not allowed, "))
+			writer.WriteHeader(model.NewMethodNotAllowed(request.Method).HttpStatus)
+			_, _ = writer.Write([]byte(model.NewMethodNotAllowed(request.Method).Error()))
 			return
 		}
 		byt, code := read(request.Body)
@@ -57,7 +58,8 @@ func load(ctx context.Context, l xLogger.ILogger) {
 	dic[del] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if request.Method != "DELETE" {
-			writer.WriteHeader(http.StatusMethodNotAllowed)
+			writer.WriteHeader(model.NewMethodNotAllowed(request.Method).HttpStatus)
+			_, _ = writer.Write([]byte(model.NewMethodNotAllowed(request.Method).Error()))
 			return
 		}
 
@@ -70,7 +72,8 @@ func load(ctx context.Context, l xLogger.ILogger) {
 	dic[update] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if request.Method != "PUT" {
-			writer.WriteHeader(http.StatusMethodNotAllowed)
+			writer.WriteHeader(model.NewMethodNotAllowed(request.Method).HttpStatus)
+			_, _ = writer.Write([]byte(model.NewMethodNotAllowed(request.Method).Error()))
 			return
 		}
 		byt, code := read(request.Body)
@@ -86,7 +89,8 @@ func load(ctx context.Context, l xLogger.ILogger) {
 	dic[find] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		if request.Method != "GET" {
-			writer.WriteHeader(http.StatusMethodNotAllowed)
+			writer.WriteHeader(model.NewMethodNotAllowed(request.Method).HttpStatus)
+			_, _ = writer.Write([]byte(model.NewMethodNotAllowed(request.Method).Error()))
 			return
 		}
 

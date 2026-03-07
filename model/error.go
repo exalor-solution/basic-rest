@@ -56,6 +56,25 @@ func NewBadRequest() *XError {
 		HttpStatus: 400,
 	}
 }
+func NewNotImplemented(m string) *XError {
+	return &XError{
+		Code:       10003,
+		Message:    "not implemented",
+		Detail:     fmt.Sprintf("method %s is not implemented", m),
+		Time:       time.Now().Format(format),
+		HttpStatus: 501,
+	}
+}
+func NewMethodNotAllowed(m string) *XError {
+	return &XError{
+
+		Code:       10003,
+		Message:    "method not allowed",
+		Detail:     fmt.Sprintf("http method `%s` is not allowed", m),
+		Time:       time.Now().Format(format),
+		HttpStatus: 405,
+	}
+}
 
 func NewSuccess() *XError {
 	return &XError{
