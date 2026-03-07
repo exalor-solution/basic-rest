@@ -1,6 +1,6 @@
 # Docker Hub pull & Run:
 - docker pull mhthrh/basic_rest:latest
-- docker run --rm -p 8080:8080 mhthrh/basic_rest:latest
+- docker run -d -p 8080:8080 mhthrh/basic_rest:latest
 - Test it now!!
 - This **Subscription REST API** service is fully up and running at [http://dev.exalor.ca:8080](http://dev.exalor.ca:8080). You can access all endpoints directly on this server to add, update, find, or delete subscriptions without needing to run it locally.
 
