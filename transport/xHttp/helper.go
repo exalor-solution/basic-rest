@@ -47,15 +47,10 @@ func load(ctx context.Context, l xLogger.ILogger) {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
 
-		err := srv.Add(ctx, byt)
-		if err != nil {
-			writer.WriteHeader(http.StatusInternalServerError)
-			_, _ = writer.Write([]byte(err.Error()))
-			return
-		}
+		res := srv.Add(ctx, byt)
 
-		writer.WriteHeader(http.StatusOK)
-		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(res.HttpStatus)
+		_, _ = writer.Write([]byte(res.Error()))
 
 	}
 
@@ -66,15 +61,10 @@ func load(ctx context.Context, l xLogger.ILogger) {
 			return
 		}
 
-		err := srv.Delete(ctx, request.URL.Query().Get("name"))
-		if err != nil {
-			writer.WriteHeader(http.StatusInternalServerError)
-			_, _ = writer.Write([]byte(err.Error()))
-			return
-		}
+		res := srv.Delete(ctx, request.URL.Query().Get("name"))
 
-		writer.WriteHeader(http.StatusOK)
-		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(res.HttpStatus)
+		_, _ = writer.Write([]byte(res.Error()))
 
 	}
 	dic[update] = func(writer http.ResponseWriter, request *http.Request) {
@@ -88,15 +78,10 @@ func load(ctx context.Context, l xLogger.ILogger) {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
 
-		err := srv.Update(ctx, request.URL.Query().Get("name"), byt)
-		if err != nil {
-			writer.WriteHeader(http.StatusInternalServerError)
-			_, _ = writer.Write([]byte(err.Error()))
-			return
-		}
+		res := srv.Update(ctx, request.URL.Query().Get("name"), byt)
 
-		writer.WriteHeader(http.StatusOK)
-		_, _ = writer.Write([]byte("success"))
+		writer.WriteHeader(res.HttpStatus)
+		_, _ = writer.Write([]byte(res.Error()))
 	}
 	dic[find] = func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -106,13 +91,13 @@ func load(ctx context.Context, l xLogger.ILogger) {
 		}
 
 		res, err := srv.Find(ctx, request.URL.Query().Get("name"))
-		if err != nil {
-			writer.WriteHeader(http.StatusInternalServerError)
+		if err.HttpStatus != 200 {
+			writer.WriteHeader(err.HttpStatus)
 			_, _ = writer.Write([]byte(err.Error()))
 			return
 		}
 
-		writer.WriteHeader(http.StatusOK)
+		writer.WriteHeader(err.HttpStatus)
 		_, _ = writer.Write([]byte(res))
 	}
 }
