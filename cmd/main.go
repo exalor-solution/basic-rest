@@ -32,22 +32,21 @@ func init() {
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	logger := l.NewLogger(logName)
-	defer func() {
-		logger.Info(ctx, "stopping service...")
-		cancel()
-		logger.LogSync()
-	}()
-
-	logger.Info(ctx, "Loading config...")
-	// load config
 
 	srv := http.Server{
 		Addr:    address,
 		Handler: xHttp.Run(ctx, logger),
 	}
+	defer func() {
+		logger.Info(ctx, "stopping service...")
+		_ = srv.Shutdown(ctx)
+		cancel()
+		logger.LogSync()
+	}()
 
 	go func() {
 		defer log.Println("server has been stopped")
+		logger.Info(ctx, "server has been started at ", zap.String("address", address))
 		if err := srv.ListenAndServe(); err != nil {
 			internalInterrupt <- err
 		}
@@ -59,7 +58,7 @@ func main() {
 	case <-osInterrupt:
 		logger.Info(ctx, "OS interrupt signal received")
 	case e := <-internalInterrupt:
-		logger.Error(ctx, "service listener interrupt, %+v", zap.Any("lis", e))
+		logger.Error(ctx, "service listener interrupt, %+v", zap.Error(e))
 	}
 
 }
